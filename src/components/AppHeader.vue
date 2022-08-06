@@ -47,11 +47,13 @@ export default defineComponent({
     const showMenu = ref(false);
     const searchTerm = ref()
 
-    const toggleMenu = () => showMenu.value = !showMenu.value;
+    const toggleMenu = (forceClose = false) => showMenu.value = forceClose === true
+        ? false
+        : !showMenu.value;
 
     const search = () => {
       if (searchTerm.value) {
-        toggleMenu()
+        toggleMenu(true)
       }
       return searchTerm.value
           ? router.push({name: 'search', params: {term: searchTerm.value}})
