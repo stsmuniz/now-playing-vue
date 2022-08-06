@@ -1,17 +1,20 @@
 <template>
-  <h1>{{ sectionTitle }}</h1>
   <section v-if="movies">
-    <carousel :settings="carouselSettings" :breakpoints="carouselBreakpoints">
+    <carousel :settings="carouselSettings">
       <slide v-for="movie in movies" :key="movie.id">
-        <movie-grid-item
-            class="carousel__item"
-            :key="movie.id"
-            :movie="movie"
+        <div
+            class="carousel__item movie-banner"
+            :style="{backgroundImage: 'url(' + imgUrl(movie.backdrop_path, 'w1280') + ')'}"
             @click="openModal(movie.id)"
-        />
+        >
+          <div class="movie-info">
+            <p class="movie-title">{{movie.title}}</p>
+            <movie-rating :rating="movie.vote_average"/>
+          </div>
+        </div>
       </slide>
       <template #addons>
-        <navigation/>
+        <pagination/>
       </template>
     </carousel>
   </section>
@@ -22,24 +25,21 @@
 
 <script lang="ts">
 import {defineComponent, PropType} from 'vue';
-import MovieGridItem from "@/components/MovieGridItem.vue";
 import iMovie from "@/interfaces/iMovie";
+import {imgUrl} from "@/service/MoviesService";
 
 import 'vue3-carousel/dist/carousel.css';
 // eslint-disable-next-line
 // @ts-ignore
-import {Carousel, Slide, Navigation} from 'vue3-carousel';
+import {Carousel, Slide, Pagination} from 'vue3-carousel';
+import MovieRating from "@/components/MovieRating.vue";
 
 
 export default defineComponent({
-  name: "MoviesCarousel",
-  components: {MovieGridItem, Carousel, Slide, Navigation},
+  name: "MoviesBanner",
+  components: {MovieRating, Carousel, Slide, Pagination},
   emits: ['onOpenModal'],
   props: {
-    sectionTitle: {
-      type: String,
-      required: true
-    },
     movies: {
       type: Object as PropType<iMovie>,
       required: false
@@ -53,27 +53,14 @@ export default defineComponent({
     const carouselSettings = {
       itemsToShow: 1,
       snapAlign: 'center',
-      wrapAround: true
-    }
-
-    const carouselBreakpoints = {
-      768: {
-        itemsToShow: 3,
-        snapAlign: 'center',
-      },
-      992: {
-        itemsToShow: 3.5,
-        snapAlign: 'start',
-      },
-      1600: {
-        itemsToShow: 5.5,
-        snapAlign: 'start',
-      }
+      wrapAround: true,
+      autoplay: 4000,
+      pauseAutoplayOnHover: true
     }
     return {
       openModal,
       carouselSettings,
-      carouselBreakpoints
+      imgUrl
     }
   }
 })
@@ -88,8 +75,25 @@ export default defineComponent({
 }
 
 .carousel__item {
-  width: 100%;
+  &.movie-banner {
+    width: 100%;
+    height: 50vw;
 
+    background-position: center 30%;
+    background-size: cover;
+    text-align: left;
+    cursor: pointer;
+    .movie-info {
+      position: absolute;
+      padding: 1.5rem;
+      bottom: 0;
+      background-image: linear-gradient(to bottom, rgba(23, 23, 23, 0), rgba(23, 23, 23,1));
+      .movie-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+    }
+  }
   .poster {
     left: 0;
   }
@@ -102,6 +106,10 @@ export default defineComponent({
 
 .carousel__pagination-button {
   background-color: $gray;
+  opacity: 0.7;
+  &:hover {
+    opacity: 1;
+  }
 
   &.carousel__pagination-button--active {
     background-color: $emphasis;
@@ -113,7 +121,11 @@ export default defineComponent({
 }
 
 .carousel__pagination {
-  display: none;
+  position: absolute;
+  width: 100vw;
+  padding: 0;
+  bottom: 0;
+  z-index: 1;
 }
 
 .loading i {
@@ -130,8 +142,11 @@ export default defineComponent({
     display: grid;
     grid-template-columns: repeat(4, auto);
   }
-  .carousel__pagination {
-    display: flex;
+  .carousel__item {
+    &.movie-banner {
+      height: 35vw;
+      background-position: center 10%;
+    }
   }
 }
 </style>

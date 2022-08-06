@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <movies-grid
-        :section-title="genre?.name"
+        :section-title="`Resultados para sua busca por: ${decodeURI(decodeURIComponent(searchTerm))}`"
         :movies="movies"
         @onOpenModal="getMovieData"
     />
@@ -15,60 +15,48 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, onMounted, ref} from 'vue';
-import {getMoviesByGenre} from "@/service/MoviesService";
+import {defineComponent, onMounted, ref} from 'vue';
+import {searchMovies} from "@/service/MoviesService";
 import MoviesGrid from "@/components/MoviesGrid.vue";
 import MovieModal from "@/components/MovieModal.vue";
 import AppFooter from "@/components/AppFooter.vue";
-import {GET_GENRE_BY_ID} from "@/store/movies_actions";
-
-import { useStore } from 'vuex';
 
 export default defineComponent({
-  name: 'GenreView',
+  name: 'SearchView',
   components: {
     AppFooter,
     MovieModal,
     MoviesGrid
   },
   props: {
-    id: {
+    term: {
       type: String,
       required: true
     }
   },
   watch: {
-    id(newId) {
-      this.getData(newId)
-      this.getGenreData(newId)
+    term(newTerm) {
+      this.getData(newTerm)
+      this.searchTerm = newTerm
     }
   },
   setup(props) {
-    const store = useStore();
     const movies = ref();
     const movieId = ref();
     const showModal = ref(false);
-    const genre = ref()
-
-    store.dispatch(GET_GENRE_BY_ID, props.id);
-    genre.value = computed(() => store.state.genre);
+    const searchTerm = ref(props.term);
 
     onMounted(() => {
-      getData(props.id)
+      getData(props.term)
     })
-
-    const getGenreData = (id: number) => {
-      store.dispatch(GET_GENRE_BY_ID, id);
-      genre.value = computed(() => store.state.genre);
-    }
 
     const getMovieData = (id: number) => {
       movieId.value = id;
       showModal.value = true
     }
 
-    const getData = (id: string) => {
-      getMoviesByGenre(id)
+    const getData = (term: string) => {
+      searchMovies(term)
         .then(response => {
         movies.value = response.data.results
       })
@@ -81,12 +69,11 @@ export default defineComponent({
 
     return {
       cleanModalData,
-      genre: genre.value,
-      getGenreData,
       movies,
       movieId,
       getMovieData,
       getData,
+      searchTerm,
       showModal
     }
   }

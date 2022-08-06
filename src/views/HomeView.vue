@@ -1,4 +1,8 @@
 <template>
+  <movies-banner
+      :movies="bannerMovies"
+      @onOpenModal="getMovieData"
+  />
   <div class="home">
     <movies-carousel
         section-title="Mais populares"
@@ -35,16 +39,19 @@ import {getNowPlayingMovies, getPopularMovies, getTopRatedMovies, getUpcomingMov
 import MovieModal from "@/components/MovieModal.vue";
 import MoviesCarousel from "@/components/MoviesCarousel.vue";
 import AppFooter from "@/components/AppFooter.vue";
+import MoviesBanner from "@/components/MoviesBanner.vue";
 
 export default defineComponent({
   name: 'HomeView',
   components: {
     AppFooter,
     MoviesCarousel,
+    MoviesBanner,
     MovieModal,
   },
   setup() {
     const popularMovies = ref();
+    const bannerMovies = ref();
     const upcomingMovies = ref();
     const topMovies = ref();
     const nowPlaying = ref();
@@ -53,7 +60,10 @@ export default defineComponent({
 
     onMounted(() => {
       getPopularMovies()
-          .then(response => popularMovies.value = response.data.results)
+          .then(response => {
+            popularMovies.value = response.data.results
+            bannerMovies.value = response.data.results?.slice(0, 5)
+          })
       getUpcomingMovies()
           .then(response => upcomingMovies.value = response.data.results)
       getTopRatedMovies()
@@ -75,6 +85,7 @@ export default defineComponent({
     return {
       cleanModalData,
       popularMovies,
+      bannerMovies,
       nowPlaying,
       topMovies,
       upcomingMovies,

@@ -1,20 +1,26 @@
 <template>
   <header>
-    <router-link class="app-name" to="/">NOW PLAYING</router-link>
-    <nav>
-      <div class="menu-item toggle-menu">
-        <span class="menu-title" @click="toggleMenu">Gêneros</span>
-        <i class="fa-solid fa-caret-down icon-desktop"></i>
-        <i class="fa-solid fa-bars icon-mobile" @click="toggleMenu"></i>
-        <div class="menu-overlay" v-if="showMenu" @click="toggleMenu">
-          <ul>
-            <li v-for="genre in genres" :key="genre.id">
-              <router-link :to="`/genre/${genre.id}`">{{genre.name}}</router-link>
-            </li>
-          </ul>
+    <div class="nav-items">
+      <router-link class="app-name" to="/">NOW PLAYING</router-link>
+      <nav>
+        <div class="menu-item toggle-menu" @click="toggleMenu">
+          <span class="menu-title">Gêneros</span>
+          <i class="fa-solid fa-caret-down icon-desktop"></i>
+          <i class="fa-solid fa-bars icon-mobile"></i>
+          <div class="menu-overlay" v-if="showMenu">
+            <ul>
+              <li v-for="genre in genres" :key="genre.id">
+                <router-link :to="`/genre/${genre.id}`">{{genre.name}}</router-link>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
+    <form v-on:submit.prevent="search" class="search-form">
+      <input type="search" v-model.trim="searchTerm">
+      <button type="submit"><i class="fa fa-search"></i> </button>
+    </form>
   </header>
 </template>
 
@@ -22,6 +28,7 @@
 import {computed, defineComponent, ref} from "vue";
 import {useStore} from "vuex";
 import {LIST_GENRES_FROM_API} from "@/store/movies_actions";
+import router from "@/router";
 
 export default defineComponent({
   name: "AppHeader",
@@ -30,12 +37,21 @@ export default defineComponent({
     store.dispatch(LIST_GENRES_FROM_API);
     const genres = computed(() => store.state.genres);
     const showMenu = ref(false);
+    const searchTerm = ref()
 
     const toggleMenu = () => showMenu.value = !showMenu.value;
+
+    const search = () => {
+      return searchTerm.value
+          ? router.push({name: 'search', params: {term: searchTerm.value}})
+          : null;
+    };
 
     return {
       genres,
       showMenu,
+      search,
+      searchTerm,
       toggleMenu
     }
   }
@@ -45,6 +61,29 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import "@/assets/styles/variables.scss";
+.search-form {
+  order: 3;
+  display: none;
+  input[type=search] {
+    border-radius: 100px;
+    padding: 5px;
+    color: $gray;
+    background-color: $dark-gray;
+    border: 1px solid $gray;
+    margin-right: 0.5rem;
+  }
+  button[type=submit] {
+    border-radius: 100px;
+    padding: 5px 7px;
+    color: $gray;
+    background-color: $black;
+    border: 1px solid $gray;
+  }
+}
+.nav-items {
+  display: flex;
+  align-items: center;
+}
 .desktop-menu {
   display: none;
 }
@@ -71,6 +110,11 @@ header {
   display: flex;
   align-items: center;
   padding: 0.25rem;
+  background-image: linear-gradient(to bottom, rgba(23,23,23,0.9) 0%, rgba(23,23,23,0.7) 60%, rgba(23,23,23,0));
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  z-index: 1;
 }
 nav {
   display: inline-block;
@@ -116,6 +160,17 @@ nav {
         display: inline-block;
       }
     }
+  }
+}
+@media screen and (min-width: 768px) {
+  header {
+    justify-content: space-between;
+    position: static;
+    top: inherit;
+    width: initial;
+  }
+  .search-form {
+    display: block;
   }
 }
 @media screen and (min-width: 992px){

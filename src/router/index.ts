@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import GenreView from "@/views/GenreView.vue";
-import CategoryView from "@/views/CategoryView.vue"
+import SearchView from "@/views/SearchView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -21,6 +21,12 @@ const routes: Array<RouteRecordRaw> = [
     path: '/genre/:id',
     component: GenreView,
     name: 'genre',
+    props: true
+  },
+  {
+    path: '/search/:term',
+    component: SearchView,
+    name: 'search',
     props: true
   }
 ]

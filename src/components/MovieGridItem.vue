@@ -15,6 +15,7 @@
 import {defineComponent, PropType, ref} from "vue";
 import MovieRating from "@/components/MovieRating.vue";
 import iMovie from "@/interfaces/iMovie";
+import {imgUrl} from "@/service/MoviesService";
 
 export default defineComponent({
   name: 'MovieGridItem',
@@ -28,9 +29,6 @@ export default defineComponent({
   },
   setup (props, {emit}) {
     const movie = ref(props.movie);
-    const imgUrl = (imgPath: string) => {
-      return `https://image.tmdb.org/t/p/w780${imgPath}`;
-    }
 
     const movieClicked = (): void => {
       emit('onMovieClicked', movie.value.id)
@@ -38,7 +36,7 @@ export default defineComponent({
 
     return {
       imgUrl,
-      movieClicked
+      movieClicked,
     }
   }
 })

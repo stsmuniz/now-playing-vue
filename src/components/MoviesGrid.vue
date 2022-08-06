@@ -62,6 +62,13 @@ export default defineComponent({
 @media screen and (min-width: 768px) {
   .movie-grid {
     display: grid;
+    grid-template-columns: repeat(2, auto);
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .movie-grid {
+    display: grid;
     grid-template-columns: repeat(4, auto);
   }
 }
