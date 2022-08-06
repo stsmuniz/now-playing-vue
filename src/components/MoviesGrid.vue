@@ -26,7 +26,8 @@ export default defineComponent({
   props: {
     sectionTitle: {
       type: String,
-      required: true
+      required: true,
+      default: ''
     },
     movies: {
       type: Object as PropType<iMovie>,

@@ -81,6 +81,7 @@ export default defineComponent({
 </script>
 <style scoped lang="scss">
 .home {
+  margin-top: 3rem;
   padding: 0 1rem;
 }
 </style>

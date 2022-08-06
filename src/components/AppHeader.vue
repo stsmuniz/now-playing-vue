@@ -3,13 +3,21 @@
     <div class="nav-items">
       <router-link class="app-name" to="/">NOW PLAYING</router-link>
       <nav>
-        <div class="menu-item toggle-menu" @click="toggleMenu">
-          <span class="menu-title">Gêneros</span>
-          <i class="fa-solid fa-caret-down icon-desktop"></i>
-          <i class="fa-solid fa-bars icon-mobile"></i>
-          <div class="menu-overlay" v-if="showMenu">
+        <div class="menu-item toggle-menu">
+          <span @click="toggleMenu">
+            <span class="menu-title">Gêneros</span>
+            <i class="fa-solid fa-caret-down icon-desktop"></i>
+            <i class="fa-solid fa-bars icon-mobile"></i>
+          </span>
+          <div class="menu-overlay" v-if="showMenu" @click.self="toggleMenu">
             <ul>
-              <li v-for="genre in genres" :key="genre.id">
+              <li class="search-container">
+                <form v-on:submit.prevent="search" class="search-form-mobile">
+                  <input type="search" v-model.trim="searchTerm">
+                  <button type="submit"><i class="fa fa-search"></i> </button>
+                </form>
+              </li>
+              <li v-for="genre in genres" :key="genre.id" @click="toggleMenu">
                 <router-link :to="`/genre/${genre.id}`">{{genre.name}}</router-link>
               </li>
             </ul>
@@ -42,6 +50,9 @@ export default defineComponent({
     const toggleMenu = () => showMenu.value = !showMenu.value;
 
     const search = () => {
+      if (searchTerm.value) {
+        toggleMenu()
+      }
       return searchTerm.value
           ? router.push({name: 'search', params: {term: searchTerm.value}})
           : null;
@@ -61,7 +72,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import "@/assets/styles/variables.scss";
-.search-form {
+.search-form, .search-form-mobile {
   order: 3;
   display: none;
   input[type=search] {
@@ -78,6 +89,25 @@ export default defineComponent({
     color: $gray;
     background-color: $black;
     border: 1px solid $gray;
+  }
+}
+.search-form-mobile {
+  display: block;
+  padding: 4px;
+  input[type=search] {
+    border-right: none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    padding-right: 0;
+    margin-right: 0;
+  }
+  button[type=submit] {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-left: 0;
+    background-color: $dark-gray;
+    margin-left: 0;
+
   }
 }
 .nav-items {
@@ -148,10 +178,11 @@ nav {
     padding: 0;
     display: block;
     left: 0;
-    li {
+    li:not(.search-container) {
       width: 100%;
       &:hover {
         background-color: $emphasis;
+        color: $gray;
       }
       a {
         text-decoration: none;
@@ -171,6 +202,9 @@ nav {
   }
   .search-form {
     display: block;
+  }
+  .search-form-mobile {
+    display: none;
   }
 }
 @media screen and (min-width: 992px){
