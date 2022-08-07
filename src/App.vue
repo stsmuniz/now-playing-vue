@@ -31,6 +31,7 @@ nav {
 
 <script>
 import AppHeader from "@/components/AppHeader";
+console.log(process.env)
 export default {
   components: {AppHeader}
 }
