@@ -11,7 +11,6 @@
         @closeModal="cleanModalData"
     />
   </div>
-  <AppFooter />
 </template>
 
 <script lang="ts">
@@ -19,7 +18,6 @@ import {computed, defineComponent, onMounted, ref} from 'vue';
 import {getMoviesByGenre} from "@/service/MoviesService";
 import MoviesGrid from "@/components/MoviesGrid.vue";
 import MovieModal from "@/components/MovieModal.vue";
-import AppFooter from "@/components/AppFooter.vue";
 import {GET_GENRE_BY_ID} from "@/store/movies_actions";
 
 import { useStore } from 'vuex';
@@ -27,7 +25,6 @@ import { useStore } from 'vuex';
 export default defineComponent({
   name: 'GenreView',
   components: {
-    AppFooter,
     MovieModal,
     MoviesGrid
   },

@@ -11,7 +11,6 @@
         @closeModal="cleanModalData"
     />
   </div>
-  <AppFooter />
 </template>
 
 <script lang="ts">
@@ -19,12 +18,10 @@ import {defineComponent, onMounted, ref} from 'vue';
 import {searchMovies} from "@/service/MoviesService";
 import MoviesGrid from "@/components/MoviesGrid.vue";
 import MovieModal from "@/components/MovieModal.vue";
-import AppFooter from "@/components/AppFooter.vue";
 
 export default defineComponent({
   name: 'SearchView',
   components: {
-    AppFooter,
     MovieModal,
     MoviesGrid
   },

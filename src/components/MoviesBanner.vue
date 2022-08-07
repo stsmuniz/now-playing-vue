@@ -122,7 +122,7 @@ export default defineComponent({
 
 .carousel__pagination {
   position: absolute;
-  width: 100vw;
+  width: 100%;
   padding: 0;
   bottom: 0;
   z-index: 1;

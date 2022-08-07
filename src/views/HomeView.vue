@@ -30,7 +30,6 @@
         @closeModal="cleanModalData"
     />
   </div>
-  <AppFooter />
 </template>
 
 <script lang="ts">
@@ -38,13 +37,11 @@ import {defineComponent, onMounted, ref} from 'vue';
 import {getNowPlayingMovies, getPopularMovies, getTopRatedMovies, getUpcomingMovies} from "@/service/MoviesService";
 import MovieModal from "@/components/MovieModal.vue";
 import MoviesCarousel from "@/components/MoviesCarousel.vue";
-import AppFooter from "@/components/AppFooter.vue";
 import MoviesBanner from "@/components/MoviesBanner.vue";
 
 export default defineComponent({
   name: 'HomeView',
   components: {
-    AppFooter,
     MoviesCarousel,
     MoviesBanner,
     MovieModal,

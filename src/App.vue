@@ -1,6 +1,7 @@
 <template>
   <app-header/>
   <router-view/>
+  <app-footer/>
 </template>
 
 <style lang="scss">
@@ -31,8 +32,9 @@ nav {
 
 <script>
 import AppHeader from "@/components/AppHeader";
+import AppFooter from "@/components/AppFooter";
 console.log(process.env)
 export default {
-  components: {AppHeader}
+  components: {AppFooter, AppHeader}
 }
 </script>
